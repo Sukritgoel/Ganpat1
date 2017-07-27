@@ -1,34 +1,47 @@
-<!DOCTYPE html>
 <html>
 <head>
   
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   
   <script type="text/javascript">
-    var accessToken = "d5068bf59f2b4a808386fa236bf4a2ee",
+      
+      var accessToken = "d5068bf59f2b4a808386fa236bf4a2ee",
       baseUrl = "https://api.api.ai/v1/",
       $speechInput,
       $recBtn,
       recognition,
-      messageRecording = "Listening...",
-	/*messageRecording = "<div class='listening'><span>Listening</span><img src='images/wave.gif'></div>",*/
-      messageCouldntHear = "My apologies, I couldn't hear you, could you say that again please?",
+      //Listening reveal
+      messageRecording = "<div class='listening'><span>Listening</span><img src='images/wave.gif'></div>",
+      messageCouldntHear = "I couldn't hear you, could you say that again?",
       messageInternalError = "Oh no, there has been an internal server error",
-      messageSorry = "I'm sorry, could you please re-phrase the question";
+      messageSorry = "I'm sorry, I don't have the answer to that yet.";
       var modal;
       var modalImg;
       var captionText;
-      var spanClose;
-    $(document).ready(function() {
+      //var spanClose;
+      var modal2;
+      var modalVid;
+      var modal3;
+      //var modal4, modal5, modal6;
+    
+$(document).ready(function() {
       
          
-        /*** FUNCTION TO DISPLAY APPROPRIATE IMAGE ON THE MODAL ***/
+      /*** FUNCTION TO DISPLAY APPROPRIATE IMAGE ON THE MODAL ***/
       modal = document.getElementById('myModal');
+      modal2 = document.getElementById('myModal2');
+      modal3 = document.getElementById('myModal3');
+      //modal4 = document.getElementById('myModal4');
+      //modal5 = document.getElementById('myModal5');
+      //modal6 = document.getElementById('myModal6');
       modalImg = document.getElementById("img01"); /** getting id of the modal Image **/
+      modalVid = document.getElementById("vid01"); /** getting id of the modal Video **/
       captionText = document.getElementById("caption"); /** to display the caption inside the modal **/
-      spanClose = document.getElementsByClassName("close")[0];
+      //spanClose = document.getElementsByClassName("close")[0];
+        
       $speechInput = $("#speech");
       $recBtn = $("#rec");
+        
       $speechInput.keypress(function(event) {
         if (event.which == 13) {
           event.preventDefault();
@@ -36,7 +49,7 @@
         }
       });
       $(window).keydown(function(event) {
-        if(event.which == 190 ) {
+        if(event.which == 190 || event.which == 9) {
             switchRecognition();
         };
       });
@@ -44,50 +57,130 @@
         $(this).next().toggleClass("is-active");
         return false;
       });
-    });
-    function findImageURL(text) {
+});
+    
+  function findImageURL(text) {
         
           console.log("TEXT IS : " + text);
           //var imageValue="";
           //var captionValue="";
           var arr = text.split(" ");
-      console.log("A 0 " + arr[0]);
-      console.log("A 1 " + arr[1]);
-      console.log("A 2 " + arr[2]);
+          console.log("A 0 " + arr[0]);
+          console.log("A 1 " + arr[1]);
+          console.log("A 2 " + arr[2]);
         
-      
           var imageValue = arr[1]+arr[2];
           var captionValue = arr[1]+" "+arr[2];
           console.log("IMAGE VALUE " + imageValue);
           console.log("CAPTION : " +captionValue);
           displayImage.call(this,imageValue, captionValue);
         }
-         /*** FUNCTION TO DISPLAY APPROPRIATE IMAGE ON THE MODAL ***/
-        function displayImage(imageUrl,caption) {
+    
+  /*** FUNCTION TO DISPLAY APPROPRIATE IMAGE ON THE MODAL ***/
+  function displayImage(imageUrl,caption) {
           
           modal.style.display = "block";
-            console.log("CLICKED");
-            imageUrl+=".jpg";
-            modalImg.src = imageUrl;
-            captionText.innerHTML = caption;
-            setTimeout(function(){
-            modal.style.display = "none";
-          }, 20000); /** WILL GET CLOSED AUTOMATICALLY AFTER 10 Sec **/
-        }
-        // Get the <span> element that closes the modal
+          console.log("CLICKED");
+          imageUrl+=".jpg";
+          modalImg.src = imageUrl;
+          captionText.innerHTML = caption;
+  }
         
-        // When the user clicks on <span> (x), close the modal
-        window.onkeydown = function() { 
-          var keyCode = event.keyCode
-          if (keyCode == 33) {
-              modal.style.display = "none";
-   
+  // When the user clicks on the clicker, close any modal
+  window.onkeydown = function() { 
+          var keyCode = event.keyCode;
+          if (keyCode == 116 || keyCode == 27) {
+            event.preventDefault();
+            document.querySelector('video').src = "";
+            modal.style.display = "none";
+            modal2.style.display = "none";
+            modal3.style.display = "none";
+            //modal4.style.display = "none";
+            //modal5.style.display = "none";
+            //modal6.style.display = "none";
           }
-        }
+          if (keyCode == 33) {
+                document.getElementById('vid01').pause();
+
+          }
+          if (keyCode == 34) {
+                document.getElementById('vid01').play();
+
+          }
+  }
       
-    //speech recognition starts
+  function findVideoURL(text) {
+        
+          console.log("TEXT IS : " + text);
+          //var imageValue="";
+          //var captionValue="";
+          var arr = text.split(" ");
+          console.log("A 0 " + arr[0]);
+          console.log("A 1 " + arr[1]);
+          console.log("A 2 " + arr[2]);
+        
+      
+          var videoValue = arr[1]+arr[2];
+          var captionValue = arr[1]+" "+arr[2];
+          console.log("IMAGE VALUE " + videoValue);
+          console.log("CAPTION : " +captionValue);
+          displayVideo.call(this, videoValue, captionValue);
+  }
+         
+  /*** FUNCTION TO DISPLAY APPROPRIATE IMAGE ON THE MODAL ***/
+  function displayVideo(videoUrl,caption) {
+            
+           modal2.style.display = "block";
+           console.log("CLICKED again");
+           videoUrl+=".webm";
+           modalVid.src = videoUrl;
+            /** Video will play after three seconds **/
+           setTimeout(function() {
+             document.getElementById('vid01').play();
+             console.log("video played");
+           }, 3000) ;
+           captionText.innerHTML = caption;
+  }
     
-    function startRecognition() {
+  //POWERPOINT 1
+  function showPpt1(text) {
+
+           if(text == "showing ppt"){
+             modal3.style.display = "block";
+             console.log("CLICKED again and again");
+           };
+  }
+    
+  /*POWERPOINT 2
+  function showPpt2(text) {
+            
+           if(text == ""){
+           modal4.style.display = "block";
+           console.log("CLICKED again and again");
+           }
+  } */
+    
+  /*POWERPOINT 3
+  function showPpt3(text) {
+            
+           if(text == ""){
+           modal5.style.display = "block";
+           console.log("CLICKED again and again and again");
+           }
+  } */
+    
+  /*POWERPOINT 4
+  function showPpt4(text) {
+            
+           if(text == ""){
+           modal6.style.display = "block";
+           console.log("CLICKED again and again and again and again");
+           }
+  } */
+
+//ALL CODE FROM HERE ON IS NOT TO BE EDITED AS IT IS WHAT CONNECTS US TO API.AI
+  function startRecognition() {
+    
       recognition = new webkitSpeechRecognition();
       recognition.continuous = false;
           recognition.interimResults = false;
@@ -109,42 +202,42 @@
         respond(messageCouldntHear);
         stopRecognition();
       };
-      recognition.lang = "en-IN";
+      recognition.lang = "en-US";
       recognition.start();
-    }
+  }
          
   
-    function stopRecognition() {
+  function stopRecognition() {
       if (recognition) {
         recognition.stop();
         recognition = null;
       }
       updateRec();
-    }
-    function switchRecognition() {
+  }
+    
+  function switchRecognition() {
       if (recognition) {
         stopRecognition();
       } else {
         startRecognition();
       }
     }
-    function setInput(text) {
+    
+  function setInput(text) {
       $speechInput.val(text);
       send();
-    }
-    function updateRec() {
-      $recBtn.text(recognition ? "Stop" : "Speak");
-    }
-	  /*$recBtn.addClass(recognition ? "btn-sonar" : "speak");*/
-	/*  if (recognition) {
+  }
+    
+  function updateRec() {
+      //$recBtn.text(recognition ? "Stop" : "Speak");
+      if (recognition) {
         $recBtn.addClass("btn-sonar");
       } else {
         $recBtn.removeClass("btn-sonar");
       }	
-	  	
-    }
-    */
-    function send() {
+  }
+    
+  function send() {
       var text = $speechInput.val();
       $.ajax({
         type: "POST",
@@ -162,293 +255,365 @@
           respond(messageInternalError);
         }
       });
-    }
-    function prepareResponse(val) {
+  }
+    
+  function prepareResponse(val) {
       var debugJSON = JSON.stringify(val, undefined, 2),
         spokenResponse = val.result.speech;
       console.log("SPOKEN RESPONSE IS : " + spokenResponse);
             console.log("SPOKEN RESPONSE IS : " + val.result.speech);
       
-      var subString = "displaying";
-          var text = spokenResponse.toLowerCase();
-          console.log(" TEXT TO CHECK : " +text);
-          if (text.indexOf(subString) != -1) {
-    
+        var subString1 = "displaying";
+        var subString2 = "loading";
+        var subString3 = "showing";
+        //var subString4 = "";
+        //var subString5 = "";
+        //var subString6 = "";
+        
+        var text = spokenResponse.toLowerCase();
+        console.log(" TEXT TO CHECK : " +text);
+        
+        if (text.indexOf(subString1) != -1) {
             console.log("display found ");
             findImageURL.call(this,text);
-          } else {
-          console.log("display not found ");
-        }
+        } else {
+            console.log("display not found ");
+        };
+      
+        if (text.indexOf(subString2) != -1) {
+            console.log("video found");
+            findVideoURL.call(this,text);
+        } else {
+            console.log("video not found ");
+        };
+      
+      //POWERPOINT 1
+        if (text.indexOf(subString3) != -1) {
+            console.log("powerpoint 1 found");
+            showPpt1.call(this,text);
+        } else {
+            console.log("ppt 1 not found ");
+        };
+      
+      /*POWERPOINT 2
+        if (text.indexOf(subString4) != -1) {
+            console.log("powerpoint 2 found");
+            showPpt2.call(this,text);
+        } else {
+            console.log("ppt 2 not found ");
+        }; */
+      
+      /*POWERPOINT 3
+        if (text.indexOf(subString5) != -1) {
+            console.log("powerpoint 3 found");
+            showPpt3.call(this,text);
+        } else {
+            console.log("ppt 3 not found ");
+        }; */
+      
+      /*POWERPOINT 4
+        if (text.indexOf(subString6) != -1) {
+            console.log("powerpoint 4 found");
+            showPpt4.call(this,text);
+        } else {
+            console.log("ppt 4 not found ");
+        }; */
       
       respond(spokenResponse);
       debugRespond(debugJSON);
-    } /// accha hoga sorry
-    function debugRespond(val) {
-      $("#response").text(val);
-      
-      
-    }
-    function respond(val) {
+  } /// accha hoga sorry
+    
+  function debugRespond(val) {
+      $("#response").text(val); 
+  }
+    
+  function respond(val) {
       if (val == "") {
         val = messageSorry;
       }
       if (val !== messageRecording) {
         var msg = new SpeechSynthesisUtterance();
-        msg.voiceURI = "native";
+	msg.default;
+	msg.URI = 'native';
         msg.text = val;
-        msg.lang = "en-US";
+        msg.lang = "en-IN";
         window.speechSynthesis.speak(msg);
       }
       $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(val);
-	      
-	      /* "<article>" + val + "</article>");
-	  $(".listening").parent().css({"padding" : "0", "background-color":"transparent"});*/
-	      
-    }
+  }
   
     
   </script>
-  <link href = "modal.css" rel = "stylesheet">
+  <link href="modal.css" rel="stylesheet">
   <style type="text/css">
-    html {
-      box-sizing: border-box;
-    }
-    *, *:before, *:after {
-      box-sizing: inherit;
-    }
-    body { 
-      background-color: #000000; 
-      font-family: "Titillium Web", Arial, sans-serif;
-      font-size: 20px;
-      margin: 0;
-    }
-    .container {
-      position: fixed;
-      top: 35%;
-      left: 50%;
-      -webkit-transform: translate(-50%, -50%);
-    }
-    input {
-      background-color: #ffffff;
-      border: 0;
-      color: #000000;
-      font-family: "Titillium Web";
-      font-size: 20px;
-      line-height: 43px;
-      padding: 0 0.75em;
-      width: 500px;
-      -webkit-transition: all 0.35s ease-in;
-    }
-    textarea {
-      background-color: #bbb;
-      border: 1px solid #000000;
-      color: #000000;
-      padding: 0.5em;
-      width: 100%;
-      -webkit-transition: all 0.35s ease-in;
-    }
-    input:active, input:focus, textarea:active, textarea:focus {
-      outline: 1px solid #48788B;
-    }
-    .btn {
-      background-color: #FEE600;
-      border: 0px solid #FEE600;
-      color: #000000;
-      cursor: pointer;
-      display: inline-block;
-      font-family: "Titillium Web";
-      font-size: 20px;
-      line-height: 43px;
-      padding: 0 0.75em;
-      text-align: center;
-      text-transform: uppercase;
-      -webkit-transition: all 0.35s ease-in;
-	  width: 60px;
-	  height: 60px;
-	  border-radius: 50%;	
-    }
-    .btn:hover {
-      background-color: #FEE600;
-      color: #000000;
-    }
-    .debug {
-      bottom: 0;
-      position: fixed;
-      right: 0;
-    }
-    .debug__content {
-      font-size: 14px;
-      max-height: 0;
-      overflow: hidden;
-      -webkit-transition: all 0.35s ease-in;
-    }
-    .debug__content.is-active {
-      display: block;
-      max-height: 500px;
-    }
-    .debug__btn {
-      width: 100%;
-    }
-    .spoken-response {
-      max-height: 0;
-      overflow: hidden;
-      -webkit-transition: all 0.35s ease-in;
-	  transition: all 0.35s ease-in;	
-    }
-    .spoken-response.is-active {
-      max-height: 400px;
-    }
-    .spoken-response__text {
-	  margin: 30px 0;
-	  border-radius: 4px;
-	  color: #FFFFFF;	
-	   -webkit-transition: all 0.35s ease-in;
-	  transition: all 0.35s ease-in;
-	  /*background-color: #ffff00; 
-	  padding: 1em;	*/
-    }
+      
+      html {
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body { 
+        background-color: #000000; 
+        font-family: "Titillium Web", Arial, sans-serif;
+        font-size: 20px;
+        margin: 0;
+      }
+      .container {
+        position: fixed;
+        top: 35%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+      }
+      input {
+        background-color: #ffffff;
+        border: 0;
+        color: #000000;
+        font-family: "Titillium Web";
+        font-size: 20px;
+        line-height: 43px;
+        padding: 0 0.75em;
+        width: 500px;
+        -webkit-transition: all 0.35s ease-in;
+      }
+      input:active, input:focus {
+        outline: 1px solid #48788B;
+      }
+      .btn {
+        background-color: #FEE600;
+        border: 0px solid #FEE600;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Titillium Web";
+        font-size: 20px;
+        line-height: 43px;
+        padding: 0 0.75em;
+        text-align: center;
+        text-transform: uppercase;
+          -webkit-transition: all 0.35s ease-in;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+      }
+      .btn:hover {
+        background-color: #FEE600;
+        color: #000000;
+      }
+      .spoken-response {
+        max-height: 0;
+        overflow: hidden;
+        -webkit-transition: all 0.35s ease-in;
+	transition: all 0.35s ease-in;
+      }
+      .spoken-response.is-active {
+        max-height: 400px;
+	-webkit-transition: all 0.35s ease-in;
+        transition: all 0.35s ease-in;
+      }
+      .spoken-response__text {
+        margin: 30px 0;
+        border-radius: 4px;
+        color: #000000;	
+        -webkit-transition: all 0.35s ease-in;
+        transition: all 0.35s ease-in;
+      }
+
+      iframe {
+          display: block;
+          margin: auto;
+          margin-top: calc(50vh - (95vw * 0.291315346));
+          width: 95vw;
+          height: calc(95vw * 0.5826306914);
+	  -webkit-transition: all 0.35s ease-in;
+       	  transition: all 0.35s ease-in;
+      }
+
+      #myModal, #myModal2 {
+	  width: 100%;
+	  height: 100%;
+	  padding-top: 100px;
+      }
+    
+      .input-block{
+        background: #FFFFFF;
+        border:1px solid #f5f5f5;
+        height: 70px;
+        border-radius: 40px;
+        width: 600px;
+        position: relative;
+        overflow: hidden;
+        margin: 0 auto;
+         -webkit-transition: all 0.35s ease-in;
+           transition: all 0.35s ease-in;
+      }
 	  
+      .input-block #speech{float: left; height: 60px; margin: 5px 10px; display: block;} 
+      .input-block #speech:focus, .input-block #speech:active{border:none; outline: none;}
+      .input-block #rec{float: right; margin: 4px; font-weight: 700; display: inline-block; outline: none; position: relative;}
 	  
-	  .input-block{
-		  background: #FFFFFF;
-		  border:1px solid #f5f5f5;
-		  height: 70px;
-		  border-radius: 40px;
-		  width: 600px;
-		  position: relative;
-		  overflow: hidden;
-		  margin: 0 auto;
-		   -webkit-transition: all 0.35s ease-in;
-	       transition: all 0.35s ease-in;
-	  }
+      #rec img{margin:12px 0 0 0;}
 	  
-	  .input-block #speech{float: left; height: 60px; margin: 5px 10px; display: block;} 
-	  .input-block #speech:focus, .input-block #speech:active{border:none; outline: none;}
-	  .input-block #rec{float: right; margin: 4px; font-weight: 700; display: inline-block; outline: none; position: relative;}
-	  
-	  #rec img{margin:12px 0 0 0;}
-	  
-	  h2{color: #FFFFFF; font-weight: 400; text-align: center; font-size:42px;}
-	  
+      h2{color: #FFFFFF; font-weight: 400; text-align: center; font-size:42px;}
 	
-		.btn-sonar::before {
-		  content: '';
-		  display: inline-block;
-		  position: absolute;
-		  width: 100%;
-		  height: 100%;
-		  border-radius: 50%;
-		  top: 0;
-		  left: 0;
-		  -webkit-animation: sonar-effect 1s ease-in-out .1s infinite;
-				  animation: sonar-effect 1s ease-in-out .1s infinite;	
-		}
+      .btn-sonar::before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        top: 0;
+        left: 0;
+        -webkit-animation: sonar-effect 1s ease-in-out .1s infinite;
+            animation: sonar-effect 1s ease-in-out .1s infinite;	
+      }
 		
 	  
-	    @-webkit-keyframes sonar-effect {
-		  0% {
-			opacity: 0.3;
-		  }
-		  40% {
-			opacity: 0.5;
-			box-shadow: 0 0 0 5px #FEE600, 0 0 10px 10px #FEE600, 0 0 0 10px #FEE600;
-		  }
-		  100% {
-			box-shadow: 0 0 0 5px #FEE600, 0 0 10px 10px #FEE600, 0 0 0 10px #FEE600;
-			-webkit-transform: scale(1.5);
-					transform: scale(1.5);
-			opacity: 0;
-		  }
-		}
+      @-webkit-keyframes sonar-effect {
+        0% {
+        opacity: 0.3;
+		    }
+        40% {
+        opacity: 0.5;
+        box-shadow: 0 0 0 5px #FEE600, 0 0 10px 10px #FEE600, 0 0 0 10px #FEE600;
+        }
+        100% {
+        box-shadow: 0 0 0 5px #FEE600, 0 0 10px 10px #FEE600, 0 0 0 10px #FEE600;
+        -webkit-transform: scale(1.5);
+            transform: scale(1.5);
+        opacity: 0;
+        }
+      }
 
-		@keyframes sonar-effect {
-		  0% {
-			opacity: 0.3;
-		  }
-		  40% {
-			opacity: 0.5;
-			box-shadow: 0 0 0 5px #FEE600, 0 0 10px 10px #FEE600, 0 0 0 10px #FEE600;
-		  }
-		  100% {
-			box-shadow: 0 0 0 5px #FEE600, 0 0 10px 10px #FEE600, 0 0 0 10px #FEE600;
-			-webkit-transform: scale(1.5);
-					transform: scale(1.5);
-			opacity: 0;
-		  }
-		}
+      @keyframes sonar-effect {
+        0% {
+        opacity: 0.3;
+        }
+        40% {
+        opacity: 0.5;
+        box-shadow: 0 0 0 5px #FEE600, 0 0 10px 10px #FEE600, 0 0 0 10px #FEE600;
+        }
+        100% {
+        box-shadow: 0 0 0 5px #FEE600, 0 0 10px 10px #FEE600, 0 0 0 10px #FEE600;
+        -webkit-transform: scale(1.5);
+            transform: scale(1.5);
+        opacity: 0;
+        }
+      }
 	  
 	  
-	  .listening{overflow:hidden; padding: 1em;}
-	  .listening span{color:#FFFFFF; font-size: 20px; margin:0 40px 0 0; float: left;}
-	  .listening img{float: left; width: 400px; height: auto;}
-	  
-	  .spoken-response__text article{background-color: #ffff00; color: #000000; padding: 1em; border-radius: 4px;  -webkit-transition: all 0.35s ease-in;
-	   transition: all 0.35s ease-in;}
-	  
-	  .branding{position: fixed; bottom: 0; right: 0;}
-	  .branding h3{color:#FFFFFF; font-weight: 600; font-size: 14px; margin: 0 0 5px 10px;}
-	  .branding img{width: 175px; height:92px;}
-	  
-	  
+      .listening{overflow:hidden; padding: 1em;}
+      .listening span{color:#ffff00; font-size: 20px; margin:0 40px 0 0; float: left;}
+      .listening img{float: left; width: 400px; height: auto;}
+
+      .spoken-response__text {background-color: #000000; border: 2px solid #ffff00; color: #ffff00; padding: 1em; border-radius: 40px; -webkit-transition: all 0.35s ease-in;
+       transition: all 0.35s ease-in;}
+
+      .branding{position: fixed; bottom: 0; right: 0;}
+      .branding h3{color:#FFFFFF; font-weight: 600; font-size: 14px; margin: 0 0 5px 10px;}
+      .branding img{width: 175px; height:92px;}
+    
   </style>
-  <link href="modal.css" rel="stylesheet">
-  <!--<link rel="stylesheet" media="screen" href="css/style.css">-->
   </head>
  
 <body>
   
-<!-- particles.js container 
- <div id="particles-js"></div>
-
- // scripts 
-<script src="js/particles.js"></script>
-<script src="js/app.js"></script>
-
- -->
-  
   <div class="container">
-  
-   <h2>How can I help you?</h2>
-  
-   <div class="input-block">
-    <input id="speech" type="text" placeholder="Speak">
-    <button id="rec" class="btn"><img src="images/microphone.png" alt="speak" width="21" height="35"></button>
-   </div> 
+    
+    <h2>How can I help you?</h2>
+    
+    <div class="input-block">
+      <input id="speech" type="text" placeholder="Speak">
+      <button id="rec" class="btn"><img src="images/microphone.png" alt="speak" width="21" height="35"></button>
+    </div> 
     
     <div id="spokenResponse" class="spoken-response">
       <div class="spoken-response__text"></div>
     </div>
     
-    
   </div>
-  
   
   <div class="branding">
    <h3>Powered by</h3>
    <img src="images/EY-Interno.png">
   </div>
   
-  
-  
-  
-  
-  
+  <!--IMAGE DIV-->
   <div id="myModal" class="modal">
 
-  <!-- The Close Button -->
-  <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+    <!-- The Close Button -->
+    <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
 
-  <!-- Modal Content (The Image) -->
-  <img class="modal-content" id="img01">
+    <!-- Modal Content (The Image/The Video) -->
+    <img class="modal-content" id="img01">
 
-  <!-- Modal Caption (Image Text) -->
-  <div id="caption"></div>
-</div>
-
-  <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700" rel="stylesheet">
+    <!-- Modal Caption (Image Text) -->
+    <div id="caption"></div>
+      
+  </div>
   
- 
+  <!--VIDEO DIV-->
+  <div id="myModal2" class="modal">
+
+    <!-- The Close Button -->
+    <span class="close" onclick="document.getElementById('myModal2').style.display='none'">&times;</span>
+
+    <!-- Modal Content (The Image/The Video) -->
+    <video class="modal2-content" id="vid01" controls type="video/webm">
+
+    <!-- Modal Caption (Image Text) -->
+    <div id="caption"></div>
+      
+  </div>
+  
+  <!--PPT1 DIV-->
+  <div id="myModal3" class="modal">
+
+    <!-- Modal Content (The Image/The Video) -->
+    <iframe crossorigin="anonymous" src='https://onedrive.live.com/embed?cid=4B2BD9E769E24BB6&resid=4B2BD9E769E24BB6%21153&authkey=ACQJdbBG96x1NOQ&em=2&wdAr=1.7777777777777777' align='middle' frameborder='0'>
+      This is an embedded <a target='_blank' href='https://office.com'>Microsoft Office</a> presentation, powered by <a target='_blank' href='https://office.com/webapps'>Office Online</a>.
+    </iframe>
+      
+   </div>
     
+   <!-- PPT2 DIV
+   <div id="myModal4" class="modal">
+
+    <span class="close" onclick="document.getElementById('myModal3').style.display='none'">&times;</span>
+
+    <iframe autofocus="true" src='https://onedrive.live.com/embed?cid=4B2BD9E769E24BB6&resid=4B2BD9E769E24BB6%21153&authkey=ACQJdbBG96x1NOQ&em=2&wdAr=1.7777777777777777' align='middle' frameborder='0'>This is an embedded <a target='_blank' href='https://office.com'>Microsoft Office</a> presentation, powered by <a target='_blank' href='https://office.com/webapps'>Office Online</a>.</iframe>
+    
+    <div id="caption"></div> 
+    
+   </div>
+   -->
+   
+   <!-- PPT3 DIV
+   <div id="myModal5" class="modal">
+
+    <span class="close" onclick="document.getElementById('myModal3').style.display='none'">&times;</span>
+
+    <iframe autofocus="true" src='https://onedrive.live.com/embed?cid=4B2BD9E769E24BB6&resid=4B2BD9E769E24BB6%21153&authkey=ACQJdbBG96x1NOQ&em=2&wdAr=1.7777777777777777' align='middle' frameborder='0'>This is an embedded <a target='_blank' href='https://office.com'>Microsoft Office</a> presentation, powered by <a target='_blank' href='https://office.com/webapps'>Office Online</a>.</iframe>
+    
+    <div id="caption"></div> 
+    
+   </div>
+   -->
+   
+   <!-- PPT4 DIV
+   <div id="myModal6" class="modal">
+
+    <span class="close" onclick="document.getElementById('myModal3').style.display='none'">&times;</span>
+
+    <iframe autofocus="true" src='https://onedrive.live.com/embed?cid=4B2BD9E769E24BB6&resid=4B2BD9E769E24BB6%21153&authkey=ACQJdbBG96x1NOQ&em=2&wdAr=1.7777777777777777' align='middle' frameborder='0'>This is an embedded <a target='_blank' href='https://office.com'>Microsoft Office</a> presentation, powered by <a target='_blank' href='https://office.com/webapps'>Office Online</a>.</iframe>
+    
+    <div id="caption"></div> 
+    
+   </div>
+   -->
+
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200" rel="stylesheet" type="text/css">
 
 </body>
 </html>
