@@ -50,7 +50,8 @@ $(document).ready(function() {
       });
       $(window).keydown(function(event) {
         if(event.which == 190 || event.which == 9) {
-            switchRecognition();
+	    	event.preventDefault();	
+            	switchRecognition();
         };
       });
       $(".debug__btn").on("click", function() {
