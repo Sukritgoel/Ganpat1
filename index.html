@@ -337,6 +337,7 @@ $(document).ready(function() {
 	msg.URI = 'native';
         msg.text = val;
         msg.lang = "en-US";
+	msg.rate = 0.9;
         window.speechSynthesis.speak(msg);
       }
       $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(val);
